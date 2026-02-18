@@ -5,7 +5,7 @@ export default defineConfig({
   timeout: 60000,
   use: {
     headless: true,
-    baseURL: 'https://example.com',
+    baseURL: 'https://practicetestautomation.com/',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure'
   }
