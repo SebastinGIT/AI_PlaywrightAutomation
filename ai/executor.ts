@@ -14,15 +14,20 @@ export async function executeSteps(page: Page, steps: any[]) {
     },
     {
       keys: ['username'],
-      action: async () => await page.fill('#username', 'testuser')
+      action: async () => await page.fill('#username', 'student')
     },
     {
       keys: ['password'],
-      action: async () => await page.fill('#password', 'password123')
+      action: async () => await page.fill('#password', 'Password123')
     },
     {
-      keys: ['login', 'click', 'submit'],
-      action: async () => await page.click('#submit')
+      keys: ['login', 'submit', 'click'],
+      action: async () => {
+        await Promise.all([
+          page.waitForLoadState('networkidle'),
+          page.click('#submit')
+        ]);
+      }
     },
   ];
 
