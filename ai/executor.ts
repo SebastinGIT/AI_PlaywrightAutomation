@@ -1,35 +1,48 @@
 import { Page } from '@playwright/test';
 import { LoginPage } from '../pages/loginPage';
 
-export async function executeSteps(page: Page, steps: string[]) {
-
+export async function executeSteps(page: Page, steps: any[]) {
   const login = new LoginPage(page);
 
-  for (const step of steps) {
+  const actions: { keys: string[]; action: () => Promise<void> }[] = [
+    {
+      keys: ['open', 'goto', 'navigate'],
+      action: async () => await page.goto('https://practicetestautomation.com/practice-test-login')
+      //       const base = page.context()._options.baseURL;
+      //       action: async () => await page.goto(new URL('/practice-test-login', base).toString())
+      //       action: async () => await page.goto('/practice-test-login', { waitUntil: 'domcontentloaded' })
+    },
+    {
+      keys: ['username'],
+      action: async () => await page.fill('#username', 'testuser')
+    },
+    {
+      keys: ['password'],
+      action: async () => await page.fill('#password', 'password123')
+    },
+    {
+      keys: ['login', 'click', 'submit'],
+      action: async () => await page.click('#submit')
+    },
+  ];
 
-    if (step.includes("goto")) {
-      await page.goto('/practice-test-login');
+  for (const raw of steps) {
+    // 🔥 handle ALL possible AI outputs
+    let step: string;
+
+    if (Array.isArray(raw)) {
+      step = raw.join(' ').toLowerCase(); // ["input","username"] → "input username"
+    } else {
+      step = String(raw).toLowerCase();
     }
 
-    if (step.includes("username")) {
-      await page.fill('#username', 'student');
-    }
+    console.log('STEP →', step);
 
-    if (step.includes("password")) {
-      await page.fill('#password', 'Password123');
-    }
-
-    if(step.includes("submit")) {
-        await page.click('button');
-    }
-
-//Commented the below code
-//     if (step.includes("click")) {
-//       await login.login('testuser', 'Password123');
-//     }
-
-    if (step.includes("verify")) {
-      await page.waitForTimeout(1000);
+    for (const item of actions) {
+      if (item.keys.some((k) => step.includes(k))) {
+        await item.action();
+        break;
+      }
     }
   }
 }

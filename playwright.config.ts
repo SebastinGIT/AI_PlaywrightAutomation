@@ -4,8 +4,8 @@ export default defineConfig({
   testDir: './tests',
   timeout: 60000,
   use: {
-    headless: true,
-    baseURL: 'https://practicetestautomation.com/',
+    headless: false,
+    baseURL: 'https://practicetestautomation.com',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure'
   }
